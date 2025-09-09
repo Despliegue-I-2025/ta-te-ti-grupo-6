@@ -34,6 +34,32 @@ if (ganador) {
 } else {
     console.log("No hay ganador todavía");
 }
+
+// Función para evaluar jugadas estratégicas
+function evaluarJugadaEstrategica(board, player) {
+  const oponente = player === 1 ? 2 : 1;
+  const puntuaciones = Array(9).fill(0);
+
+  // Priorizar el centro
+  if (board[4] === 0) return 4;
+
+  // Priorizar esquinas
+  const esquinas = [0, 2, 6, 8];
+  const esquinasVacias = esquinas.filter((pos) => board[pos] === 0);
+  if (esquinasVacias.length > 0) {
+    return esquinasVacias[Math.floor(Math.random() * esquinasVacias.length)];
+  }
+
+  // Priorizar lados
+  const lados = [1, 3, 5, 7];
+  const ladosVacios = lados.filter((pos) => board[pos] === 0);
+  if (ladosVacios.length > 0) {
+    return ladosVacios[Math.floor(Math.random() * ladosVacios.length)];
+  }
+
+  return -1;
+}
+
 // GET /move?board=[0,1,0,2,0,0,0,0,0]
 app.get('/move', (req, res) => {
     let boardParam = req.query.board;
