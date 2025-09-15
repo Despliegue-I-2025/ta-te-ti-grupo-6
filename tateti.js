@@ -25,16 +25,6 @@ function verificarGanador(board) {
     return null; // No hay ganador todavía
 }
 
-// Ejemplo de uso:
-let tablero = ["X", "X", "X", null, "O", null, null, "O", null];
-let ganador = verificarGanador(tablero);
-
-if (ganador) {
-    console.log("El ganador es: " + ganador);
-} else {
-    console.log("No hay ganador todavía");
-}
-
 // Función para evaluar jugadas estratégicas
 function evaluarJugadaEstrategica(board, player) {
     const oponente = player === 1 ? 2 : 1;
