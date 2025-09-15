@@ -25,6 +25,19 @@ function verificarGanador(board) {
     return null; // No hay ganador todavía
 }
 
+function findWinnerMove(board, player) {
+    for (let i = 0; i < 9; i++) {
+        if (board [i] === 0 ) {
+            const TemporaryBoard=[...board];
+             temporaryBoard[i] = player;
+            if (verificador (temporaryBoard) === player) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
 // Función para evaluar jugadas estratégicas
 function evaluarJugadaEstrategica(board, player) {
     const oponente = player === 1 ? 2 : 1;
