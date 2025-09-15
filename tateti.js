@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+
+function togglePlayer(board) {
+    const count1 = board.filter((cell) => cell === 1).length;
+    const count2 = board.filter((cell) => cell ===2).length;
+    return count1 <= count2 ?  1 : 2;
+}
+
 function verificarGanador(board) {
     // Todas las combinaciones posibles para ganar
     const combinacionesGanadoras = [
@@ -103,6 +110,8 @@ app.get('/move', (req, res) => {
         return res.status(400).json({ error: 'No hay movimientos disponibles.' });
     }
     
+    const jugador = determinarJugador(board); 
+
     // Elegir una posición vacía al azar
     const move = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
     res.json({ movimiento: move });
