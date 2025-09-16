@@ -78,7 +78,7 @@ function bestMove(board) {
         if (blockMove !== -1) return blockMove;
 
         // 3. Jugada estratégica
-        const strategicMove = chooseStrategicMove(actualPlayer);
+        const strategicMove = chooseStrategicMove(board);
         return strategicMove;
 }
 
