@@ -118,6 +118,15 @@ app.get('/move', (req, res) => {
     if (!Array.isArray(board) || board.length !== 9) {
         return res.status(400).json({ error: 'El tablero debe ser un array de 9 posiciones.' });
     }
+
+    const ganador = VerificarGanador(board);
+    if (ganador !== null) {
+    return res.status(400).json({
+        error: 'El juego ya termino. Ganador: ${ganador === 1 ? "X" : "O"}',
+    });
+    }
+
+    
     // Buscar posiciones vacías (asumiendo que 0 es vacío)
     const emptyPositions = board
         .map((v, i) => v === 0 ? i : null)
