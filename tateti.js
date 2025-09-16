@@ -34,10 +34,10 @@ function checkWinner(board) {
 
 function findWinnerMove(board, player) {
     for (let i = 0; i < 9; i++) {
-        if (board [i] === 0 ) {
-            const TemporaryBoard=[...board];
-             temporaryBoard[i] = player;
-            if (verificador (temporaryBoard) === player) {
+        if (board[i] === 0) {
+            const temporaryBoard = [...board];
+            temporaryBoard[i] = player;
+            if (checkWinner(temporaryBoard) === player) {
                 return i;
             }
         }
@@ -63,8 +63,6 @@ function chooseStrategicMove(board) {
     if (emptySides.length > 0) {
       return emptySides[Math.floor(Math.random() * emptySides.length)];
     }
-
-    return -1;
 }
 
 function bestMove(board) {
@@ -80,11 +78,8 @@ function bestMove(board) {
         if (blockMove !== -1) return blockMove;
 
         // 3. Jugada estratégica
-        const strategicMove = chooseStrategicMove(board, actualPlayer);
-        if (strategicMove !== -1) return strategicMove;
-
-        // 4. Fallback: primera posición disponible
-        return board.findIndex((cell) => cell === 0);
+        const strategicMove = chooseStrategicMove(actualPlayer);
+        return strategicMove;
 }
 
 // Función para dibujar el tablero
@@ -143,6 +138,9 @@ app.get('/move', (req, res) => {
     const newBoard = [...board];
     newBoard[move] = player;
 
+    // Para mostrar el estado del juego
+    const newWinner = checkWinner(newBoard);
+
     res.json({
     movimiento: move,
     jugador: player,
@@ -153,7 +151,12 @@ app.get('/move', (req, res) => {
       newBoard.slice(3, 6),
       newBoard.slice(6, 9),
     ],
-    grafico: drawBoard(newBoard, move)
+    tablero_formateado: drawBoard(newBoard, move),
+    estado_de_juego: newWinner !== null
+        ? "victoria"
+        : emptyPositions.length - 1 === 0
+        ? "empate"
+        : "en juego"
   });
 });
 
