@@ -46,28 +46,45 @@ function findWinnerMove(board, player) {
 }
 
 // Función para evaluar jugadas estratégicas
-function evaluarJugadaEstrategica(board, player) {
-    const oponente = player === 1 ? 2 : 1;
-    const puntuaciones = Array(9).fill(0);
-
+function chooseStrategicMove(board) {
     // Priorizar el centro
     if (board[4] === 0) return 4;
 
     // Priorizar esquinas
-    const esquinas = [0, 2, 6, 8];
-    const esquinasVacias = esquinas.filter((pos) => board[pos] === 0);
-    if (esquinasVacias.length > 0) {
-      return esquinasVacias[Math.floor(Math.random() * esquinasVacias.length)];
+    const corners = [0, 2, 6, 8];
+    const emptyCorners = corners.filter((pos) => board[pos] === 0);
+    if (emptyCorners.length > 0) {
+      return emptyCorners[Math.floor(Math.random() * emptyCorners.length)];
     }
 
     // Priorizar lados
-    const lados = [1, 3, 5, 7];
-    const ladosVacios = lados.filter((pos) => board[pos] === 0);
-    if (ladosVacios.length > 0) {
-      return ladosVacios[Math.floor(Math.random() * ladosVacios.length)];
+    const sides = [1, 3, 5, 7];
+    const emptySides = sides.filter((pos) => board[pos] === 0);
+    if (emptySides.length > 0) {
+      return emptySides[Math.floor(Math.random() * emptySides.length)];
     }
 
     return -1;
+}
+
+function bestMove(board) {
+        const actualPlayer = togglePlayer(board);
+        const adversary = actualPlayer === 1 ? 2 : 1;
+        
+        // 1. Buscar jugada ganadora
+        const winnerMove = findWinnerMove(board, actualPlayer);
+        if (winnerMove !== -1) return winnerMove;
+
+        // 2. Bloquear jugada del oponente
+        const blockMove = findWinnerMove(board, adversary);
+        if (blockMove !== -1) return blockMove;
+
+        // 3. Jugada estratégica
+        const strategicMove = chooseStrategicMove(board, actualPlayer);
+        if (strategicMove !== -1) return strategicMove;
+
+        // 4. Fallback: primera posición disponible
+        return board.findIndex((cell) => cell === 0);
 }
 
 // Función para dibujar el tablero
@@ -109,12 +126,27 @@ app.get('/move', (req, res) => {
     if (emptyPositions.length === 0) {
         return res.status(400).json({ error: 'No hay movimientos disponibles.' });
     }
-    
-    const jugador = determinarJugador(board); 
 
-    // Elegir una posición vacía al azar
-    const move = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
-    res.json({ movimiento: move });
+    // Llamar la función que determina el mejor movimiento y el jugador actual
+    const move = bestMove(board);
+    const player = togglePlayer(board); 
+
+    // Mostrar el tablero con el movimiento
+    const newBoard = [...board];
+    newBoard[move] = player;
+
+    res.json({
+    movimiento: move,
+    jugador: player,
+    tablero_ingresado: board,
+    tablero_nuevo: newBoard,
+    tablero: [
+      newBoard.slice(0, 3),
+      newBoard.slice(3, 6),
+      newBoard.slice(6, 9),
+    ],
+    grafico: drawBoard(newBoard, move)
+  });
 });
 
 app.listen(PORT, () => {
