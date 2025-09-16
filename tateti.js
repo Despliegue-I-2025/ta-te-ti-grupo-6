@@ -8,9 +8,9 @@ function togglePlayer(board) {
     return count1 <= count2 ?  1 : 2;
 }
 
-function verificarGanador(board) {
+function checkWinner(board) {
     // Todas las combinaciones posibles para ganar
-    const combinacionesGanadoras = [
+    const winnerCombinations = [
         [0, 1, 2], // fila superior
         [3, 4, 5], // fila del medio
         [6, 7, 8], // fila inferior
@@ -22,9 +22,9 @@ function verificarGanador(board) {
     ];
 
     // Revisar cada combinación
-    for (let combo of combinacionesGanadoras) {
+    for (let combo of winnerCombinations) {
         const [a, b, c] = combo;
-        if (tablero[a] && board[a] === board[b] && board[a] === board[c]) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             return board[a]; // Devuelve "X" o "O"
         }
     }
@@ -118,6 +118,14 @@ app.get('/move', (req, res) => {
     if (!Array.isArray(board) || board.length !== 9) {
         return res.status(400).json({ error: 'El tablero debe ser un array de 9 posiciones.' });
     }
+    
+    const winner = checkWinner(board);
+    if (winner !== null) {
+    return res.status(400).json({
+        error: 'El juego ya termino. Ganador: ${winner === 1 ? "X" : "O"}',
+    });
+    }
+    
     // Buscar posiciones vacías (asumiendo que 0 es vacío)
     const emptyPositions = board
         .map((v, i) => v === 0 ? i : null)
