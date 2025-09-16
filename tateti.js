@@ -8,9 +8,9 @@ function togglePlayer(board) {
     return count1 <= count2 ?  1 : 2;
 }
 
-function verificarGanador(board) {
+function checkWinner(board) {
     // Todas las combinaciones posibles para ganar
-    const combinacionesGanadoras = [
+    const winnerCombinantions = [
         [0, 1, 2], // fila superior
         [3, 4, 5], // fila del medio
         [6, 7, 8], // fila inferior
@@ -22,9 +22,9 @@ function verificarGanador(board) {
     ];
 
     // Revisar cada combinación
-    for (let combo of combinacionesGanadoras) {
+    for (let combo of winnerCombinations) {
         const [a, b, c] = combo;
-        if (tablero[a] && board[a] === board[b] && board[a] === board[c]) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             return board[a]; // Devuelve "X" o "O"
         }
     }
