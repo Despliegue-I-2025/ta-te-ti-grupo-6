@@ -119,8 +119,8 @@ app.get('/move', (req, res) => {
         return res.status(400).json({ error: 'El tablero debe ser un array de 9 posiciones.' });
     }
 
-    const ganador = checkWinner(board);
-    if (ganador !== null) {
+    const winner = checkWinner(board);
+    if (winner !== null) {
     return res.status(400).json({
         error: 'El juego ya termino. Ganador: ${winner === 1 ? "X" : "O"}',
     });
