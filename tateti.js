@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = 3011;
 
 function togglePlayer(board) {
     const count1 = board.filter((cell) => cell === 1).length;
