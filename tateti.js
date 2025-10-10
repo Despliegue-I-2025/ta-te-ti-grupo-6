@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = 3011;
 
 function togglePlayer(board) {
     const count1 = board.filter((cell) => cell === 1).length;
@@ -128,6 +128,9 @@ app.get('/move', (req, res) => {
     // Mostrar el tablero con el movimiento
     const newBoard = [...board];
     newBoard[move] = player;
+
+    // Para mostrar el estado del juego
+    const newWinner = checkWinner(newBoard);
 
     res.json({
         movimiento: move,
