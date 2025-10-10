@@ -8,6 +8,7 @@ function togglePlayer(board) {
     return count1 <= count2 ?  1 : 2;
 }
 
+// Facu y Lauty G
 function checkWinner(board) {
     // Todas las combinaciones posibles para ganar
     const winnerCombinations = [
@@ -33,7 +34,7 @@ function checkWinner(board) {
 }
 
 function findWinnerMove(board, player) {
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 25; i++) {
         if (board[i] === 0) {
             const temporaryBoard = [...board];
             temporaryBoard[i] = player;
@@ -46,19 +47,27 @@ function findWinnerMove(board, player) {
 }
 
 // Función para evaluar jugadas estratégicas
+// debemos hacer esta función con movimientos más erráticos
 function chooseStrategicMove(board) {
     // Priorizar el centro
-    if (board[4] === 0) return 4;
+    if (board[12] === 0) return 12;
+
+    // Centro expandido (posiciones alrededor del centro)
+    const center = [6, 7, 8, 11, 13, 16, 17, 18];
+    const emptyCenter = center.filter((pos) => board[pos] === 0);
+    if (emptyCenter.length > 0) {
+        return emptyCenter[Math.floor(Math.random() * emptyCenter.length)];
+    }
 
     // Priorizar esquinas
-    const corners = [0, 2, 6, 8];
+    const corners = [0, 4, 20, 24];
     const emptyCorners = corners.filter((pos) => board[pos] === 0);
     if (emptyCorners.length > 0) {
       return emptyCorners[Math.floor(Math.random() * emptyCorners.length)];
     }
 
     // Priorizar lados
-    const sides = [1, 3, 5, 7];
+    const sides = [1, 2, 3, 5, 9, 10, 14, 15, 19, 21, 22, 23];
     const emptySides = sides.filter((pos) => board[pos] === 0);
     if (emptySides.length > 0) {
       return emptySides[Math.floor(Math.random() * emptySides.length)];
@@ -82,25 +91,6 @@ function bestMove(board) {
         return strategicMove;
 }
 
-// Función para dibujar el tablero
-function drawBoard(board, move = null) {
-    const symbols = { 0: "·", 1: "X", 2: "O" };
-    let output = "";
-  
-    for (let i = 0; i < 9; i++) {
-      if (move === i) {
-        output += `[${symbols[board[i]]}]`;
-      } else {
-        output += ` ${symbols[board[i]]} `;
-      }
-    
-      if ((i + 1) % 3 === 0) {
-        output += "\n";
-      }
-    }
-    return output;
-}
-
 // GET /move?board=[0,1,0,2,0,0,0,0,0]
 app.get('/move', (req, res) => {
     let boardParam = req.query.board;
@@ -110,15 +100,16 @@ app.get('/move', (req, res) => {
     } catch (e) {
         return res.status(400).json({ error: 'Parámetro board inválido. Debe ser un array JSON.' });
     }
-    if (!Array.isArray(board) || board.length !== 9) {
-        return res.status(400).json({ error: 'El tablero debe ser un array de 9 posiciones.' });
+    if (!Array.isArray(board) || board.length !== 25) {
+        return res.status(400).json({ error: 'El tablero debe ser un array de 25 posiciones.' });
     }
-    
+
+    // Verificar si el juego ya terminó
     const winner = checkWinner(board);
     if (winner !== null) {
-    return res.status(400).json({
-        error: 'El juego ya termino. Ganador: ${winner === 1 ? "X" : "O"}',
-    });
+        return res.status(400).json({
+            error: `El juego ya terminó. El ganador es el ${winner === 1 ? "Jugador 1 (X)" : "Jugador 2 (O)"}`,
+        });
     }
     
     // Buscar posiciones vacías (asumiendo que 0 es vacío)
@@ -142,22 +133,13 @@ app.get('/move', (req, res) => {
     const newWinner = checkWinner(newBoard);
 
     res.json({
-    movimiento: move,
-    jugador: player,
-    tablero_ingresado: board,
-    tablero_nuevo: newBoard,
-    tablero: [
-      newBoard.slice(0, 3),
-      newBoard.slice(3, 6),
-      newBoard.slice(6, 9),
-    ],
-    tablero_formateado: drawBoard(newBoard, move),
-    estado_de_juego: newWinner !== null
-        ? "victoria"
-        : emptyPositions.length - 1 === 0
-        ? "empate"
-        : "en juego"
-  });
+        movimiento: move,
+        tablero_para_pruebas: [
+            newBoard.slice(0, 3),
+            newBoard.slice(3, 6),
+            newBoard.slice(6, 9)
+        ]
+    });
 });
 
 app.listen(PORT, () => {
