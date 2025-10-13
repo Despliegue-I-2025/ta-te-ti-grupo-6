@@ -41,10 +41,10 @@ function checkWinner(board) {
     ];
 
     // Revisar cada combinación
-    for (let combo of winnerCombinations) {
-        const [a, b, c] = combo;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            return board[a]; // Devuelve "X" o "O"
+   for (let combo of winnerCombinations) {
+        const [a, b, c, d] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c] && board[a] === board[d]) {
+            return board[a];
         }
     }
 
