@@ -38,7 +38,7 @@ function checkWinner(board) {
         [3, 8, 13, 18],
         [8, 13, 18, 23],
         [4, 9, 14, 19],
-        [9, 14, 19, 24],
+        [9, 14, 19, 24]
     ];
 
     // Revisar cada combinación
