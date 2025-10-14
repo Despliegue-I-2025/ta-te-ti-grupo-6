@@ -163,8 +163,10 @@ app.get('/move', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor de tateti escuchando en el puerto ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Servidor de tateti escuchando en el puerto ${PORT}`);
+    });
+}
 
-module.exports = { app, togglePlayer, checkWinner, findWinnerMove, chooseStrategicMove, chooseStrategicMove, bestMove };
+module.exports = { app, togglePlayer, checkWinner, findWinnerMove, chooseStrategicMove, bestMove };

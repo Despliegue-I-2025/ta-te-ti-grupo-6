@@ -229,14 +229,15 @@ describe('bestMove', () => {
 });
 
 describe('Juego completo', () => {
-    it('debe detectar empate cuando no hay movimientos disponibles pero no hay ganador', () => {
-          // Tablero realmente lleno sin 4 en línea
+    it('debe detectar cuando no hay ganador en tablero con movimientos pero sin combinaciones ganadoras', () => {
+        // Tablero con varios movimientos pero sin 4 en línea
+        // Este es un patrón que evita deliberadamente 4 consecutivos
         const board = [
             1, 2, 1, 2, 1,
             2, 1, 2, 1, 2,
-            1, 2, 2, 1, 2,
-            2, 1, 1, 2, 1,
-            1, 2, 2, 1, 2 
+            0, 1, 2, 0, 0,  // Fila incompleta en el medio para romper posibles combinaciones
+            2, 1, 2, 1, 2,
+            1, 2, 1, 2, 1
         ];
         expect(checkWinner(board)).toBeNull();
     });
