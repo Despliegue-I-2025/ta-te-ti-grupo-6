@@ -57,7 +57,7 @@ function findWinnerMove(board, player) {
         if (board [i] === 0 ) {
             const TemporaryBoard=[...board];
              TemporaryBoard[i] = player;
-            if (verificador (TemporaryBoard) === player) {
+            if (checkWinner(TemporaryBoard) === player) {
                 return i;
             }
         }
@@ -154,9 +154,11 @@ app.get('/move', (req, res) => {
     res.json({
         movimiento: move,
         tablero_para_pruebas: [
-            newBoard.slice(0, 3),
-            newBoard.slice(3, 6),
-            newBoard.slice(6, 9)
+            newBoard.slice(0, 5),
+            newBoard.slice(5, 10),
+            newBoard.slice(10, 15),
+            newBoard.slice(15, 20),
+            newBoard.slice(20, 25)
         ]
     });
 });
